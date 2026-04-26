@@ -20,10 +20,11 @@ RUN npm config set fetch-timeout=120000 && \
 
 # 📦 Copier package files
 COPY package*.json ./
+COPY tsconfig*.json ./
+COPY nest-cli.json ./
 
 # 📥 Installer les dépendances
 RUN npm ci && \
-    npm run build && \
     npm cache clean --force && \
     rm -rf /tmp/* /root/.npm
 
