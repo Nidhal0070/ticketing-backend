@@ -14,8 +14,8 @@ export class AiService {
       baseURL: "https://api.groq.com/openai/v1"
     });
     
-    // ✅ Pour Docker: utiliser le nom du service "backend"
-    // ✅ Pour local: utiliser "localhost"
+    // Pour Docker: utiliser le nom du service "backend"
+    //  Pour local: utiliser "localhost"
     this.backendUrl = process.env.BACKEND_URL || 'http://backend:3000';
   }
 
@@ -68,7 +68,7 @@ export class AiService {
       if (jsonMatch) {
         const parsed = JSON.parse(jsonMatch[0]);
         
-        // ✅ Si l'IA demande l'intervention d'un admin → appeler l'endpoint interne
+        //  Si l'IA demande l'intervention d'un admin → appeler l'endpoint interne
         if (parsed.needsAdmin === true && ticketId) {
           await this.notifyAdmin(ticketId, title, parsed.escalationReason || "Intervention requise", "high");
         }
@@ -89,7 +89,7 @@ export class AiService {
     }
   }
 
-  // ✅ Appel HTTP interne pour notifier l'admin
+  // Appel HTTP interne pour notifier l'admin
   private async notifyAdmin(ticketId: string, title: string, reason: string, urgency: string) {
     try {
       console.log(`📧 [IA] Attempting to notify admin at: ${this.backendUrl}/auth/notify-admin`);

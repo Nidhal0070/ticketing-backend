@@ -1,8 +1,8 @@
-# ╔════════════════════════════════════════════════════════════════╗
-# ║          CI/CD Pipeline — Backend NestJS                      ║
-# ║  Déclenché à chaque push sur main                             ║
-# ║  Build → Test → Push Docker Hub                               ║
-# ╚════════════════════════════════════════════════════════════════╝
+# 
+#   CI/CD Pipeline — Backend NestJS                      
+#   Déclenché à chaque push sur main                             
+#   Build → Test → Push Docker Hub                               
+# 
  
 name: Backend CI/CD
  
@@ -32,13 +32,13 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
  
-      - name: 📦 Install dependencies
+      - name:  Install dependencies
         run: npm ci
  
-      - name: 🔍 Lint
+      - name:  Lint
         run: echo "Lint skipped" || true
  
-      - name: 🏗️ Build TypeScript
+      - name: Build TypeScript
         run: npm run build
  
   # ─── Job 2 : Build & Push Docker Hub ──────────────────────────
@@ -61,7 +61,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
  
-      - name: 🏷️ Extract metadata (tags)
+      - name:  Extract metadata (tags)
         id: meta
         uses: docker/metadata-action@v5
         with:
@@ -81,7 +81,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
  
-      - name: ✅ Image pushed successfully
+      - name:  Image pushed successfully
         run: |
-          echo "✅ Image pushed: ${{ env.DOCKER_IMAGE }}:latest"
-          echo "🔖 SHA tag: ${{ env.DOCKER_IMAGE }}:sha-$(git rev-parse --short HEAD)"
+          echo " Image pushed: ${{ env.DOCKER_IMAGE }}:latest"
+          echo " SHA tag: ${{ env.DOCKER_IMAGE }}:sha-$(git rev-parse --short HEAD)"

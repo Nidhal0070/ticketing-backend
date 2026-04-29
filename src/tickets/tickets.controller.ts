@@ -17,7 +17,7 @@ import { Roles } from '../auth/roles/decorator';
 import { RolesGuard } from '../auth/roles/guard';
 import { AiService } from '../IA/ai.service';
 
-// تعريف Interface في بداية الملف (بعد الـ imports)
+
 interface AnalysisResult {
   id: any;
   title: string;
@@ -48,42 +48,42 @@ export class TicketsController {
     return this.ticketsService.findAll();
   }
 
-  // جلب tickets متاع user
+  // 
   @Roles('user','admin')
   @Get("my")
   getMyTickets(@Req() req: any) {
     return this.ticketsService.getUserTickets(req.user.userId);
   }
 
-  // user أو admin يشوف ticket
+  // user or admin execute ticketdetails
   @Roles('user','admin')
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.ticketsService.findOne(id);
   }
 
-  // admin يبدل status
+  // admin update status
   @Roles('admin')
   @Patch(":id/status")
   updateStatus(@Param("id") id: string, @Body("status") status: string) {
     return this.ticketsService.updateStatus(id, status);
   }
 
-  // admin يعدل ticket
+  // admin  change ticket
   @Roles('admin')
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateTicketDto) {
     return this.ticketsService.update(id, dto);
   }
 
-  // admin يحذف ticket
+  // admin supprime ticket
   @Roles('admin')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.ticketsService.remove(id);
   }
 
-  // ✅ NEW: AI analysis for conversation (admin only)
+  //  NEW: AI analysis for conversation (admin only)
   @Roles('admin')
   @Post(':id/analyze')
   async analyzeTicketFromDashboard(
@@ -105,12 +105,12 @@ export class TicketsController {
         );
       } else {
         // Otherwise, analyze ticket directly (from Dashboard)
-        // ✅ IMPORTANT: Pass ticketId so notifyAdmin() is called if needed
+        //  IMPORTANT: Pass ticketId so notifyAdmin() is called if needed
         const analysis = await this.aiService.analyzeTicket(
           ticket.title,
           ticket.description || "",
           [],
-          id  // ✅ Pass ticketId here!
+          id  // Pass ticketId here!
         );
          console.log("📥 Analysis received:", JSON.stringify(analysis));
 
@@ -156,7 +156,7 @@ export class TicketsController {
     
     for (const ticket of tickets) {
       try {
-        // ✅ IMPORTANT: Pass ticketId so notifyAdmin() is called if needed
+        //  IMPORTANT: Pass ticketId so notifyAdmin() is called if needed
         const analysis = await this.aiService.analyzeTicket(
           ticket.title,
           ticket.description || "",

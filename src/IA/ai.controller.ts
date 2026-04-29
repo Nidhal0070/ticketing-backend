@@ -6,7 +6,7 @@ export class AiController {
 
   constructor(private readonly aiService: AiService) {}
 
-  // test endpoint (خليه)
+  // test endpoint 
   @Get("test")
   test() {
     return this.aiService.analyzeTicket(
@@ -16,7 +16,7 @@ export class AiController {
     );
   }
 
-  // 🔥 AI ANALYZE الحقيقي
+  //  AI ANALYZE 
   @Post('analyze')
   async analyze(@Body() body: any) {
 

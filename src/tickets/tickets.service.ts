@@ -19,7 +19,7 @@ export class TicketsService {
   ) {}
 
   async create(dto: CreateTicketDto, userId: string) {
-     // 1. إنشاء تذكرة مؤقتة أولاً للحصول على المعرف (ID)
+     
     const tempTicket = {
       ...dto,
       userId,
@@ -33,7 +33,7 @@ export class TicketsService {
     };
     
     const savedTicket = await this.ticketModel.create(tempTicket);
-    // 1. نبعث ticket للـ IA (تحليل تلقائي)
+    // 1. analise ia 
     let aiAnalysis = { 
       priority: dto.priority ?? 'medium', 
       category: 'other', 
@@ -47,7 +47,7 @@ export class TicketsService {
         dto.title,
         dto.description || '',
         [],
-        savedTicket._id.toString()  // تمرير المعرف لتوليد الإشعارات إذا لزم الأمر 
+        savedTicket._id.toString()  
       );
       
       aiAnalysis = {
@@ -61,7 +61,7 @@ export class TicketsService {
       console.error('IA analysis failed:', error);
     }
 
-    // 2. نضيف result للticket
+    // 2. ajouter les champs retournee par l'ia a la ticket
    savedTicket.priority = aiAnalysis.priority;
     savedTicket.category = aiAnalysis.category;
     savedTicket.suggestedReply = aiAnalysis.suggestedReply;
@@ -70,21 +70,21 @@ export class TicketsService {
     savedTicket.escalationReason = aiAnalysis.escalationReason;
     savedTicket.analyzed = true;
 
-    // 3. نخزن في database
+    // 3. stokee en database
      return savedTicket.save();
   }
 
   async findAll() {
     const tickets = await this.ticketModel.find().sort({ createdAt: -1 });
     
-    // ✅ Trier: les tickets avec needsAdmin = true en premier
+    // Trier: les tickets avec needsAdmin = true en premier
     const sortedTickets = tickets.sort((a, b) => {
       if (a.needsAdmin && !b.needsAdmin) return -1;
       if (!a.needsAdmin && b.needsAdmin) return 1;
       return 0;
     });
     
-    // جلب أسماء المستخدمين لكل تذكرة
+    // importe le nom de user pour chaque ticket
     const ticketsWithUser = await Promise.all(
       sortedTickets.map(async (ticket) => {
         const user = await this.userModel.findById(ticket.userId).select('name');
@@ -97,7 +97,7 @@ export class TicketsService {
     
     return ticketsWithUser;
   }
-// جلب تذكرة واحدة حسب المعرف
+// ticket par id
   async findOne(id: string) {
     const ticket = await this.ticketModel.findById(id);
     if (!ticket) throw new NotFoundException('Ticket not found');
@@ -109,7 +109,7 @@ export class TicketsService {
       userName: user?.name || 'Unknown'
     };
   }
-  // تحديث تذكرة
+  // update ticket
   async update(id: string, dto: UpdateTicketDto) {
     const ticket = await this.ticketModel.findByIdAndUpdate(id, dto, {
       new: true,

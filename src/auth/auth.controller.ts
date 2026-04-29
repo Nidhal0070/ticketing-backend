@@ -19,7 +19,7 @@ login(@Body() body:any){
   console.log('📨 [AUTH] Request body:', JSON.stringify(body, null, 2));
   return this.authService.login(body);
 }
- // ✅ Nouveau: L'IA appelle cet endpoint pour notifier l'admin
+ // Nouveau: L'IA appelle cet endpoint pour notifier l'admin
   @Post('notify-admin')
   notifyAdmin(@Body() body: { ticketId: string; reason: string; urgency: string; title?: string }) {
     const notification = {
@@ -38,13 +38,13 @@ login(@Body() body:any){
     return { message: 'Admin notifié avec succès', notification };
   }
 
-  // ✅ Nouveau: Récupérer toutes les notifications non lues
+  // Nouveau: Récupérer toutes les notifications non lues
   @Get('notifications')
   getNotifications() {
     return notificationsStore.filter(n => !n.read);
   }
 
-  // ✅ Nouveau: Marquer une notification comme lue
+  //  Nouveau: Marquer une notification comme lue
   @Patch('notifications/:id/read')
   markNotificationAsRead(@Param('id') id: string) {
     const notification = notificationsStore.find(n => n.id.toString() === id);

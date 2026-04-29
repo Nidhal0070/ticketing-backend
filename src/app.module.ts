@@ -35,11 +35,11 @@ export class AppModule implements OnModuleInit {
     console.log('👤 [APP-MODULE] Initializing admin user...');
     
     try {
-      // ✅ Supprimer l'utilisateur existant s'il y en a un
+      //  Supprimer l'utilisateur existant s'il y en a un
       await this.usersService.deleteByEmail(adminEmail);
       console.log('🔄 [APP-MODULE] Old admin user deleted (if existed)');
 
-      // ✅ Créer un nouvel utilisateur admin avec un mot de passe hashé correct
+      //  Créer un nouvel utilisateur admin avec un mot de passe hashé correct
       const bcrypt = require('bcrypt');
       const hashedPassword = await bcrypt.hash(adminPassword, 10);
       
